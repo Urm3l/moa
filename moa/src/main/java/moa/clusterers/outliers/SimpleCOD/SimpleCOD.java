@@ -36,6 +36,17 @@ import com.yahoo.labs.samoa.instances.Instance;
 public class SimpleCOD extends SimpleCODBase {
     public FloatOption radiusOption = new FloatOption("radius", 'r', "Search radius.", 0.1);
     public IntOption kOption = new IntOption("k", 't', "Parameter k.", 50);
+
+    // Tools for feedback
+    public int neighbourCount;
+    public ISBNode currentNode;
+    public ISBIndex getIndex(){
+        return ISB;
+    }
+    public void setRadius(double radius) {m_radius = radius; }
+    public double getRadius() { return m_radius; }
+    public void setK(int k){m_k = k;}
+    public int getK(){return m_k;}
     
     public SimpleCOD()
     {
@@ -103,6 +114,11 @@ public class SimpleCOD extends SimpleCODBase {
         
         if (bTrace) Println("Check if nodeNew is an inlier or outlier"); 
         int count = nodeNew.CountPrecNeighs(GetWindowStart()) + nodeNew.count_after;
+
+        // Make neighbourcount available
+        neighbourCount = count;
+        currentNode = nodeNew;
+
         if (count >= m_k) {
             if (bTrace) Println("nodeNew is an inlier");   
             nodeNew.bOutlier = false;
