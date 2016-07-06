@@ -5,7 +5,7 @@ import com.github.javacliparser.IntOption;
 import moa.core.ObjectRepository;
 import moa.tasks.TaskMonitor;
 
-public class CusumTwoSided extends AbstractChangeDetector {
+public class SimpleCusumTwoSided extends AbstractChangeDetector {
 
     private static final long serialVersionUID = -3518369648142099719L;
 
@@ -27,7 +27,7 @@ public class CusumTwoSided extends AbstractChangeDetector {
     public double sumP;
     public double sumN;
 
-    public double x_mean;
+    public double prev = 0.0;
 
     private double alpha;
 
@@ -35,14 +35,13 @@ public class CusumTwoSided extends AbstractChangeDetector {
 
     private double lambda;
 
-    public CusumTwoSided() {
+    public SimpleCusumTwoSided() {
         resetLearning();
     }
 
     @Override
     public void resetLearning() {
         m_n = 1;
-        x_mean = 0.0;
         sumP = 0.0;
         sumN = 0.0;
         sum = 0.0;
@@ -58,19 +57,19 @@ public class CusumTwoSided extends AbstractChangeDetector {
             this.isInitialized = true;
         }
 
-        x_mean = x_mean + (x - x_mean) / (double) m_n;
-
-        sumP = Math.max(0, sumP + (x - x_mean) - this.delta);
-        sumN = Math.max(0, sumN - (x - x_mean) - this.delta);
-        sum = sum + (x - x_mean) - this.delta;
 
 
+        sumP = Math.max(0, sumP + (x - prev) - this.delta);
+        sumN = Math.max(0, sumN - (x - prev) - this.delta);
+        sum = sum + (x - prev) - this.delta;
+
+        prev = x;
 
 
         m_n++;
 
         // System.out.print(prediction + " " + m_n + " " + (m_p+m_s) + " ");
-        this.estimation = x_mean;
+        this.estimation = prev;
         this.isChangeDetected = false;
         this.isWarningZone = false;
         this.delay = 0;
