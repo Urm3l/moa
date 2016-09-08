@@ -75,7 +75,7 @@ public class CusumTwoSided extends AbstractChangeDetector {
         this.isWarningZone = false;
         this.delay = 0;
 
-        if (m_n < this.minNumInstancesOption.getValue()) {
+        if (m_n <= this.minNumInstancesOption.getValue()) {
             return;
         }
 
